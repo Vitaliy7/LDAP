@@ -1,0 +1,6 @@
+- name: install & configure clients
+  hosts: client1.otus.lan, client2.otus.lan
+  become: true
+
+  roles:
+    - clients

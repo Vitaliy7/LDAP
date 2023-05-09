@@ -1,0 +1,44 @@
+---
+# tasks file for server
+- name: install chrony
+  yum:
+    name: chrony
+    state: present
+
+- name: setup timezone
+  timezone:
+    name: "Europe/Moscow"
+
+- name: disable selinux
+  selinux:
+    state: disabled
+
+- name: disable selinux now
+  shell: setenforce 0
+
+- name: disable firewall
+  service:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: update rpm
+  yum:
+    name: 'rpm'
+    state: latest
+
+- name: install module DL1
+  command: yum install -y @idm:DL1
+
+- name: install freeipa
+  yum:
+    name: ipa-server
+    state: latest
+
+- name: change hosts
+  lineinfile:
+    path: /etc/hosts
+    line: '192.168.57.10 ipa.otus.lan ipa'
+    owner: root
+    group: root
+    mode: 0644

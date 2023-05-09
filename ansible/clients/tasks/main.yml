@@ -1,0 +1,45 @@
+---
+# tasks file for clients
+- name: Base set up
+  yum:
+    name:
+      - vim
+      - chrony
+    state: present
+    update_cache: true
+  
+- name: disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: disable SElinux
+  selinux:
+    state: disabled
+
+- name: disable SElinux now
+  shell: setenforce 0
+
+- name: change hosts
+  lineinfile:
+    path: /etc/hosts
+    line: '192.168.57.10 ipa.otus.lan ipa'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: update rpm
+  yum:
+    name: 'rpm'
+    state: latest
+
+- name: install module ipa-client
+  yum:
+    name:
+      - freeipa-client
+    state: present
+    update_cache: true
+
+- name: add host to ipa-server
+  shell: echo -e "yes\nyes" | ipa-client-install --mkhomedir --domain=OTUS.LAN --server=ipa.otus.lan --no-ntp -p admin -w otus2023

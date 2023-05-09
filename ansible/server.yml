@@ -1,0 +1,6 @@
+- name: install & configure ipa-server
+  hosts: ipa.otus.lan
+  become: true
+
+  roles:
+    - server
